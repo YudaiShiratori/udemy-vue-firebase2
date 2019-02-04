@@ -1,7 +1,8 @@
 <template>
-  <div v-if="smoothie" class="edit-smoothie container">
-    <h2>edit {{ smoothie.title }}</h2>
-    <form @submit.prevent="EditSmoothie">
+  <div class="edit-smoothie container">
+    <h2>edit {{ this.$route.params.smoothie_slug }}</h2>
+    <h2>aaa</h2>
+    <!-- <form @submit.prevent="EditSmoothie">
       <div class="field-title">
         <label for="title">smoothie Title:</label>
         <input type="text" name="title" v-model="smoothie.title">
@@ -19,7 +20,7 @@
         <p v-if="feedback" class="red-text">{{ feedback }}</p>
         <button class="btn pink">Update Smoothie</button>
       </div>
-    </form>
+    </form> -->
   </div>
 </template>
 
@@ -30,30 +31,30 @@ export default {
   name: 'EditSmoothie',
   data() {
     return {
-      smoothie: null,
-      another: null,
-      feedback: null
+      smoothie: null
+      // another: null,
+      // feedback: null
     }
   },
-  methods: {
-    EditSmoothie() {
-      console.log(this.smoothie.title, this.smoothie.ingredient)
-    },
-    addIng() {
-      if (this.another) {
-        this.smoothie.ingredients.push(this.another)
-        this.another = null
-        this.feedback = null
-      } else {
-        this.feedback = "You must enter a value to add ingredients"
-      }
-    },
-    deleteIng(ing) {
-      this.smoothie.ingredients = this.smoothie.ingredients.filter( ingredient => {
-        return ingredient != ing
-      })
-    }
-  },
+  // methods: {
+  //   EditSmoothie() {
+  //     // console.log(this.smoothie.title, this.smoothie.ingredient)
+  //   },
+  //   addIng() {
+  //     if (this.another) {
+  //       this.smoothie.ingredients.push(this.another)
+  //       this.another = null
+  //       this.feedback = null
+  //     } else {
+  //       this.feedback = "You must enter a value to add ingredients"
+  //     }
+  //   },
+  //   deleteIng(ing) {
+  //     this.smoothie.ingredients = this.smoothie.ingredients.filter( ingredient => {
+  //       return ingredient != ing
+  //     })
+  //   }
+  // },
   created() {
     let ref = db.collection('smoothies').where('slug', '==', this.$route.params.smoothie_slug)
     ref.get().then(snapshot => {

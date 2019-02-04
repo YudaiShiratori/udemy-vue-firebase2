@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/Index'
 import AddSmoothie from '@/components/AddSmoothie'
-import Editsmoothie from '@/components/Editsmoothie'
+import EditSmoothie from '@/components/EditSmoothie'
 
 Vue.use(Router)
 
@@ -21,7 +21,7 @@ export default new Router({
     {
       path: '/edit-smoothie/:smoothie_slug',
       name: 'EditSmoothie',
-      component: Editsmoothie
+      component: EditSmoothie
     }
   ]
 })
