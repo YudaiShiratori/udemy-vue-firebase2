@@ -1,8 +1,8 @@
 <template>
-  <div class="edit-smoothie container">
+  <div v-if="smoothie" class="edit-smoothie container">
     <h2>edit {{ this.$route.params.smoothie_slug }}</h2>
     <h2>aaa</h2>
-    <!-- <form @submit.prevent="EditSmoothie">
+    <form @submit.prevent="EditSmoothie">
       <div class="field-title">
         <label for="title">smoothie Title:</label>
         <input type="text" name="title" v-model="smoothie.title">
@@ -20,41 +20,60 @@
         <p v-if="feedback" class="red-text">{{ feedback }}</p>
         <button class="btn pink">Update Smoothie</button>
       </div>
-    </form> -->
+    </form>
   </div>
 </template>
 
 <script>
 import db from '@/firebase/init'
+import slugify from 'slugify'
 
 export default {
   name: 'EditSmoothie',
   data() {
     return {
-      smoothie: null
-      // another: null,
-      // feedback: null
+      smoothie: null,
+      another: null,
+      feedback: null
     }
   },
-  // methods: {
-  //   EditSmoothie() {
-  //     // console.log(this.smoothie.title, this.smoothie.ingredient)
-  //   },
-  //   addIng() {
-  //     if (this.another) {
-  //       this.smoothie.ingredients.push(this.another)
-  //       this.another = null
-  //       this.feedback = null
-  //     } else {
-  //       this.feedback = "You must enter a value to add ingredients"
-  //     }
-  //   },
-  //   deleteIng(ing) {
-  //     this.smoothie.ingredients = this.smoothie.ingredients.filter( ingredient => {
-  //       return ingredient != ing
-  //     })
-  //   }
-  // },
+  methods: {
+    EditSmoothie() {
+      if(this.smoothie.title) {
+        this.feedback = null,
+        this.slug = slugify(this.smoothie.title, {
+          replacement: '-',
+          remove: /[$*_~.()'"!\-:@]/g,
+          lower: true
+        })
+        db.collection('smoothies').coc(this.smoothie.id).update({
+          title: this.smoothie.title,
+          ingredients: this.ingredients,
+          slug: this.slug
+        }).then(() => {
+          this.$router.push({ name: 'Index'})
+        }).catch(err =>{
+          console.log(err)
+        })
+      } else {
+        this.feedback = "You must enter a title"
+      }
+    },
+    addIng() {
+      if (this.another) {
+        this.smoothie.ingredients.push(this.another)
+        this.another = null
+        this.feedback = null
+      } else {
+        this.feedback = "You must enter a value to add ingredients"
+      }
+    },
+    deleteIng(ing) {
+      this.smoothie.ingredients = this.smoothie.ingredients.filter( ingredient => {
+        return ingredient != ing
+      })
+    }
+  },
   created() {
     let ref = db.collection('smoothies').where('slug', '==', this.$route.params.smoothie_slug)
     ref.get().then(snapshot => {
