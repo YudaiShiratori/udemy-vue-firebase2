@@ -41,15 +41,15 @@ export default {
     EditSmoothie() {
       if(this.smoothie.title) {
         this.feedback = null,
-        this.slug = slugify(this.smoothie.title, {
+        this.smoothie.slug = slugify(this.smoothie.title, {
           replacement: '-',
           remove: /[$*_~.()'"!\-:@]/g,
           lower: true
         })
-        db.collection('smoothies').coc(this.smoothie.id).update({
+        db.collection('smoothies').doc(this.smoothie.id).update({
           title: this.smoothie.title,
-          ingredients: this.ingredients,
-          slug: this.slug
+          ingredients: this.smoothies.ingredients,
+          slug: this.smoothies.slug
         }).then(() => {
           this.$router.push({ name: 'Index'})
         }).catch(err =>{
